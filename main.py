@@ -3,10 +3,13 @@ from models.schema import SkillResponse
 from core.config_manager import LLMConfig, load_config, save_config
 from agents.workflow import skill_agent_app  # 引入我们写好的 LangGraph 图
 from agents.state import AgentState
-from typing import List
 from sqlalchemy.orm import Session
 from fastapi import Depends
 from models.database import SessionLocal, SkillRecord
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import List, Dict, Any
+
 
 # 依赖项：获取数据库会话
 def get_db():
@@ -20,8 +23,21 @@ def get_db():
 app = FastAPI(
     title="SkillCraft AI Backend",
     description="Godot 组件生成引擎与 API 大厅",
-    version="0.1.0",
+    version="1.0.0",
 )
+
+# --- 关键修复代码开始 ---
+app.add_middleware(
+    CORSMiddleware,
+    # 允许访问的源，写 "*" 代表允许所有，或者精准写 ["http://localhost:5173"]
+    allow_origins=["*"], 
+    allow_credentials=True,
+    # 允许所有请求方式 (GET, POST, OPTIONS 等)
+    allow_methods=["*"],
+    # 允许所有请求头
+    allow_headers=["*"],
+)
+# --- 关键修复代码结束 ---
 
 @app.get("/")
 async def read_root() -> dict[str, str]:
@@ -134,6 +150,24 @@ async def delete_skill_from_library(skill_id: str, db: Session = Depends(get_db)
     db.delete(skill)
     db.commit()
     return {"status": "success", "message": "组件已删除"}
+
+# 定义前端传过来的蓝图数据结构
+class BlueprintPayload(BaseModel):
+    nodes: List[Dict[Any, Any]]
+    edges: List[Dict[Any, Any]]
+
+# 接收蓝图的 API
+@app.post("/api/v1/blueprint/export")
+async def export_blueprint(payload: BlueprintPayload):
+    # 打印出来看看前端传了什么宝贝
+    print(f"\n🚀 [蓝图接收成功] 共包含 {len(payload.nodes)} 个节点, {len(payload.edges)} 条连线")
+    
+    # 以后这里将接入大模型，把这些节点翻译成真正的 Godot GDScript 和 .tscn 场景文件！
+    
+    return {
+        "status": "success", 
+        "message": f"成功接收 {len(payload.nodes)} 个组件的装配图纸，准备生成 Godot 场景！"
+    }
 
 if __name__ == "__main__":
     import uvicorn
