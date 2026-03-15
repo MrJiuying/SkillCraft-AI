@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 # 👇 就是这一行漏掉了，必须把它加上 👇
 from models.schema import SkillResponse 
+# 👇 新增引入配置管理器
+from core.config_manager import LLMConfig, load_config, save_config
 
 app = FastAPI(
     title="SkillCraft AI Backend",
@@ -39,6 +41,21 @@ func _physics_process(delta):
         version="1.0.0",
         author="SkillCraft AI"
     )
+
+# ==========================================
+# 系统配置接口 (Settings API)
+# ==========================================
+
+@app.get("/api/v1/config", response_model=LLMConfig)
+async def get_system_config():
+    """获取当前持久化的大模型配置"""
+    return load_config()
+
+@app.post("/api/v1/config")
+async def update_system_config(config: LLMConfig):
+    """更新并持久化大模型配置"""
+    save_config(config)
+    return {"status": "success", "message": "系统配置已保存到 config.json"}
 
 if __name__ == "__main__":
     import uvicorn
