@@ -5,6 +5,8 @@ from datetime import datetime
 class SkillResponse(BaseModel):
     id: str = Field(..., description="Unique identifier for the skill")
     name: str = Field(..., description="Name of the Godot component skill")
+    alias_zh: Optional[str] = "未命名组件"
+    category: Optional[str] = "System"
     description: str = Field(..., description="Detailed description of the skill")
     code_content: str = Field(..., description="Generated Godot script code")
     

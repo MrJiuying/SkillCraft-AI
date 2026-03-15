@@ -1,0 +1,41 @@
+🚀 快速上手 (Usage)
+1. 环境准备
+确保已安装 Python 3.10+，并激活虚拟环境：
+
+PowerShell
+# Windows
+python -m venv venv
+.\venv\Scripts\activate
+2. 安装依赖
+PowerShell
+pip install fastapi uvicorn pydantic langchain-openai langgraph sqlalchemy streamlit requests
+3. 启动服务 (双头龙模式)
+请开启两个终端窗口，分别运行后端引擎和监控大屏：
+
+终端 1 (启动 FastAPI 后端):
+
+PowerShell
+uvicorn main:app --reload
+# 后端 API 文档地址: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+终端 2 (启动 Streamlit 监控台):
+
+PowerShell
+streamlit run ui/dashboard.py
+# 监控大屏地址: http://localhost:8501
+4. 使用流程
+打开监控大屏，在左侧边栏录入 DeepSeek (或其他兼容 OpenAI 格式) 的 API Key 并保存。
+
+在主界面输入需求（例：“写一个处理实体受击与无敌帧的组件”）。
+
+点击“开始铸造”，等待 AI 返回代码与参数契约。
+
+修改中文别名与分类后，点击“入库”。
+
+点击侧边栏“刷新仓库”，查看沉淀的数字资产。
+
+🗺️ 未来规划 (Roadmap)
+[x] Phase 1: SkillCraft 后端引擎与本地资产库 (当前版本)
+
+[ ] Phase 2: GameCraft 拼装台 (React + Zustand 打造的可视化蓝图连线前端)
+
+[ ] Phase 3: 云端集市 (Godot 组件共享与一键下载导出)

@@ -29,3 +29,11 @@ sandbox/tmp_*.gd
 # UI 与监控台 (Streamlit)
 # =========================
 .streamlit/
+
+# =========================
+# 数据库与本地存储
+# =========================
+*.db
+*.sqlite
+*.sqlite3
+skillcraft_library.db
